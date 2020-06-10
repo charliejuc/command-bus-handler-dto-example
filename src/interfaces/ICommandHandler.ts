@@ -1,3 +1,3 @@
 export interface ICommandHandler {
-    handle(command: object): Promise<void>
+    handle(object: object): Promise<void>
 }
