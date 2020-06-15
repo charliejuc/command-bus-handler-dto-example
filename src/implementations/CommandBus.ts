@@ -1,6 +1,5 @@
 import { ICommandHandler } from '@/interfaces/ICommandHandler'
-
-export class CommandBus {
+export class CommandBus implements ICommandHandler {
     private readonly handlers: { [key: string]: ICommandHandler } = {}
 
     addHandler(
@@ -10,14 +9,16 @@ export class CommandBus {
         this.handlers[commandName] = commandHandler
     }
 
-    async handle(command: object): Promise<void> {
-        const commandName = command.constructor.name
-        const commandHandler = this.handlers[commandName]
+    async handle(object: object): Promise<void> {
+        const commandName = object.constructor.name
+        const handler = this.handlers[commandName]
 
-        if (commandHandler === undefined) {
-            throw new Error(`"${commandName}" not found in handlers`)
+        if (handler === undefined) {
+            throw new Error(
+                `handler for command ${commandName} not found`
+            )
         }
 
-        return await commandHandler.handle(command)
+        return await handler.handle(object)
     }
 }
